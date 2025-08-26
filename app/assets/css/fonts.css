@@ -1,0 +1,15 @@
+/* Import Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Bubblegum+Sans&family=Bungee&family=Quicksand:wght@300..700&display=swap');
+
+/* Custom font utility classes */
+.font-bubble {
+  font-family: "Bubblegum Sans", cursive;
+}
+
+.font-bungee {
+  font-family: "Bungee", cursive;
+}
+
+.font-quicksand {
+  font-family: "Quicksand", sans-serif;
+}
