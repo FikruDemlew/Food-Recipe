@@ -1,13 +1,12 @@
 <template>
-  <div class="mb-140">
+  <div class="mb-260 md:mb-200">
     <div class="pt-20 pb-20 max-h-screen bg-[url('/background.jpg')] bg-cover min-h-screen">
       <div
         class="mx-auto mt-65 w-90 md:w-200 text-center font-bubble text-amber text-white text-4xl sm:text-7xl md:text-8xl"
       >
         Cook, taste, and share your creations
         <div class="mt-20 rounded-full transition delay-150 ease-in-out hover:scale-105 no-underline">
-          <NuxtLink to="RecipesListing" class="text-white font-quick text-xl bg-red-700 p-2 md:p-5 w-50 md:w-80 rounded-4xl cursor-pointer ">
-          
+          <NuxtLink to="recipes" class="text-white font-quick text-xl bg-midnight p-2 md:p-5 w-50 md:w-80 rounded-4xl cursor-pointer ">
               Today's Recipe ⟶
           </NuxtLink>
         </div>
@@ -40,25 +39,41 @@
           />
         </div>
       </div>
+      <div class=" text-white py-12 md:py-16 px-4 md:px-8 w-full">
+    <div class="max-w-4xl mx-auto text-center mt-20">
+      <!-- Heading -->
+      <h2 class="text-3xl md:text-4xl font-bold font-sans mb-4 md:mb-6">
+        Discover and Share Your Culinary Creations
+      </h2>
+      <!-- Description -->
+      <p class="text-base md:text-lg text-gray-200 mb-6 md:mb-8">
+        Explore a world of flavors or add your own recipe to inspire others. Join our community of food lovers today!
+      </p>
+      <!-- Button -->
+      <NuxtLink to="/Login">
+        <button class="cursor-pointer px-6 py-3  bg-transparent border border-white rounded-xl hover:bg-white hover:text-black transition">
+          Create Your Recipe
+        </button>
+      </NuxtLink>
     </div>
   </div>
+    </div>
+
+  </div>
+
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
-import { RouterLink } from 'vue-router'
 
+// Scroll effect
 const isScrolled = ref(false)
-
 const handleScroll = () => {
   isScrolled.value = window.scrollY > 50
 }
+onMounted(() => window.addEventListener('scroll', handleScroll))
+onUnmounted(() => window.removeEventListener('scroll', handleScroll))
 
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll)
-})
 
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll)
-})
+
 </script>

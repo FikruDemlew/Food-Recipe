@@ -1,5 +1,10 @@
 @import "tailwindcss";
 
+@theme {
+  --color-midnight: #7D0A0A;
+  --color-tahiti: #3ab7bf;
+  --color-bermuda: #78dcca;
+}
 
 body {
     background-color: rgb(36, 36, 36);

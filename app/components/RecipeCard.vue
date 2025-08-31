@@ -1,39 +1,55 @@
 <template>
-  <div class="bg-black h-fit w-100 rounded-3xl">
-    <div class="overflow-hidden">
-      <img
-        class="object-cover transform transition-transform duration-500 hover:scale-110"
-        src="../assets/img/seafood.jpg"
-      />
-    </div>
-    <div class="px-3">
-      <div class="text-white grid grid-flow-col gap-55">
-        <h1 class="text-2xl font-extrabold font-quick">hai Basil</h1>
-        <p class="bg-red-700 px-2 py-1 mt-1 w-fit">$ 437</p>
+  <div class="bg-gray-900 h-fit w-80 md:w-120 rounded-3xl shadow-lg overflow-hidden transition-transform hover:scale-[1.02] duration-300">
+    <NuxtLink :to="`/recipes/${recipes.id}`" class="block">
+      <!-- Image Section -->
+      <div class="overflow-hidden rounded-t-3xl">
+        <img
+          class="w-full h-60 object-cover transition-transform duration-500 hover:scale-110"
+          src="/assets/img/seafood.jpg"
+          alt="Recipe image"
+        />
       </div>
-
-      <div class="text-white mt-5">
-        <div class="flex gap-47">
-          <div class="flex gap-2">
-            <img class="h-5" src="/clock.png" />
-            <p>30 minutes</p>
+    </NuxtLink>
+    <!-- Content Section -->
+    <div class="p-4 text-white">
+      <!-- Title and Price -->
+      <div class="grid grid-flow-col gap-4 items-center">
+        <h1 class="text-2xl font-bold font-sans truncate">{{ recipes.title }}</h1>
+        <span class="bg-midnight text-sm font-medium px-3 py-1 rounded-full justify-self-end">{{ recipes.price }}</span>
+      </div>
+      <!-- Metadata -->
+      <div class="mt-4 text-gray-300 text-sm">
+        <div class="flex justify-between items-center">
+          <div class="flex items-center gap-2">
+            <img class="h-4 w-4" src="/clock.png" alt="Time icon" />
+            <span>{{ recipes.time }}</span>
           </div>
-          <h1>Super Dry</h1>
+          <span class="italic">{{ recipes.author }}</span>
         </div>
-
-        <div class="flex gap-50 items-center">
-          <div class="flex gap-2">
-            <img class="h-5" src="/chat.png" />
-            <p>35</p>
-            <img class="h-5" src="/like.png" />
-            <p>55</p>
+      </div>
+      <!-- Engagement Metrics -->
+      <div class="mt-4 flex justify-between items-center text-sm">
+        <div class="flex items-center gap-4">
+          <div class="flex items-center gap-1">
+            <img class="h-4 w-4" src="/chat.png" alt="Comments icon" />
+            <span>{{ recipes.comments || 35 }}</span>
           </div>
-          <img class="h-15" src="/rating.png" />
+          <div class="flex items-center gap-1">
+            <img class="h-4 w-4" src="/like.png" alt="Likes icon" />
+            <span>{{ recipes.likes || 55 }}</span>
+          </div>
         </div>
+        <img class="h-6" src="/rating.png" alt="Rating" />
       </div>
     </div>
   </div>
-  <div></div>
 </template>
 
-<script></script>
+<script setup>
+defineProps({
+  recipes: {
+    type: Object,
+    required: true
+  }
+})
+</script>
