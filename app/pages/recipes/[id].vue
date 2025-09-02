@@ -1,33 +1,48 @@
 <template>
   <div class="max-w-4xl mx-auto p-6">
-    <RecipeDetailCard :recipes="recipe"/>
+    <RecipeDetailCard :recipe="recipeDetails"/>
   </div>
+  
 </template>
 
 <script setup>
 import { useRoute } from 'vue-router'
 
 const route = useRoute()
-const recipeId = route.params.id
+const recipeId = String(route.params.id)
 
-// Temporary static data (replace with Hasura query later)
-const recipe = {
-id: recipeId,
-title: recipeId,
-author: 'John Smith',
-ingredients: [
-    '200g spaghetti',
-    '100g pancetta',
-    '2 large eggs',
-    '50g pecorino cheese',
-    'Black pepper'
-    ],
-instructions: [
-    'Cook spaghetti in salted water.',
-    'Fry pancetta until crispy.',
-    'Mix eggs with cheese for sauce.',
-    'Toss with hot pasta.'
-    ]
+
+const GET_RECIPE = gql`
+  query GetRecipe($id: uuid!) {
+    recipes_by_pk(id: $id) {
+    title
+    category_id
+    created_at
+    description
+    id
+    image
+    prep_time_minutes
+    recipe_ingredients{
+      ingredient_name
+    }
+    user{
+      username
+    }
+    instruction{
+      steps
+    }
+    }
   }
+`;
+const { data, loading, error } = await useAsyncQuery(GET_RECIPE, { id: recipeId })
+
+const recipe = data.value
+const recipeDetails = recipe?.recipes_by_pk
+const recipeDetailsTitle = recipeDetails?.title
+
+
+console.log(recipeDetailsTitle)
+
+
 
 </script>

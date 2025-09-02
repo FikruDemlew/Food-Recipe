@@ -14,7 +14,19 @@ export default defineNuxtConfig({
       ],
     },
   },
-
+modules: ['@nuxtjs/apollo'],
+apollo: {
+    clients: {
+      default: {
+        httpEndpoint: 'http://localhost:8080/v1/graphql',
+        httpLinkOptions: {
+          headers: {
+            'x-hasura-admin-secret':'myadminsecretkey',
+          },
+        },
+      }
+    },
+  },
   compatibilityDate: "2025-07-15",
 
   devtools: { enabled: true },

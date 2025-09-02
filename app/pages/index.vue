@@ -1,5 +1,5 @@
 <template>
-  <div class="mb-260 md:mb-200">
+  <div class="mb-260 md:mb-220">
     <div class="pt-20 pb-20 max-h-screen bg-[url('/background.jpg')] bg-cover min-h-screen">
       <div
         class="mx-auto mt-65 w-90 md:w-200 text-center font-bubble text-amber text-white text-4xl sm:text-7xl md:text-8xl"
@@ -58,13 +58,17 @@
     </div>
   </div>
     </div>
-
   </div>
 
 </template>
 
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue'
+
+
+
+
+
 
 // Scroll effect
 const isScrolled = ref(false)
