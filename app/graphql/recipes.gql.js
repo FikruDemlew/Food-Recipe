@@ -10,10 +10,17 @@ export const GET_RECIPES = gql`
       image
       prep_time_minutes
       created_at
+      user{
+        username
+        id
+      }
       category {
         id
         name
       }
+      recipe_ingredients{
+      ingredient_name
+    }
       instruction {
         id
         steps
@@ -32,10 +39,17 @@ export const GET_RECIPE_BY_ID = gql`
       image
       prep_time_minutes
       created_at
+      user{
+        username
+        id
+      }
       category {
         id
         name
       }
+      recipe_ingredients{
+      ingredient_name
+    }
       instruction {
         id
         steps
@@ -43,6 +57,36 @@ export const GET_RECIPE_BY_ID = gql`
     }
   }
 `
+
+
+export const GET_RECIPE_BY_USER_ID = gql`
+  query GetRecipeByUserId($user_id: uuid!) {
+  recipes(where: { user_id: { _eq: $user_id } }) {
+    id
+    title
+    description
+    image
+    prep_time_minutes
+    created_at
+    user {
+      username
+      id
+    }
+    category {
+      id
+      name
+    }
+    recipe_ingredients {
+      ingredient_name
+    }
+    instruction {
+      id
+      steps
+    }
+  }
+}
+
+  `;
 
 // Insert recipe
 export const INSERT_RECIPE = gql`
@@ -72,3 +116,30 @@ export const DELETE_RECIPE = gql`
     }
   }
 `
+
+export const ADD_RECIPE = gql`
+  mutation AddRecipe(
+  $title: String
+  $prep_time_minutes: Int
+  $image: String
+  $category_id: uuid!
+  $user_id: uuid!
+  $ingredients: [ingredients_insert_input!]
+  $instructions: [instructions_insert_input!]
+) {
+  insert_recipes_one(object: {
+    title: $title
+    prep_time_minutes: $prep_time_minutes
+    image: $image
+    category_id: $category_id
+    user_id: $user_id
+    ingredients: { data: $ingredients }
+    instructions: { data: $instructions }
+  }) {
+    id
+    title
+  }
+}
+
+
+`;

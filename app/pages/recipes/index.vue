@@ -11,20 +11,9 @@
 
 <script setup>
 
-const query = gql`
-  query getRecipes {
-  recipes {
-    title
-    category_id
-    created_at
-    description
-    id
-    image
-    prep_time_minutes
-  }
-}
-`
-const { data, pending, error } = await useAsyncQuery(query)
+import { GET_RECIPES } from '~/graphql'
+
+const { data, pending, error } = await useAsyncQuery(GET_RECIPES)
 const recipesResults = computed(() => data.value?.recipes ?? [])
 console.log(recipesResults.value)
 
