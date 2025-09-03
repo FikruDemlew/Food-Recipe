@@ -88,6 +88,35 @@ export const GET_RECIPE_BY_USER_ID = gql`
 
   `;
 
+
+export const GET_RECIPE_BY_CATEGORY = gql`
+  query GetRecipeByUserId($category_id: Int!) {
+  recipes(where: { category_id: { _eq: $category_id } }) {
+    id
+    title
+    description
+    image
+    prep_time_minutes
+    created_at
+    user {
+      username
+      id
+    }
+    category {
+      id
+      name
+    }
+    recipe_ingredients {
+      ingredient_name
+    }
+    instruction {
+      id
+      steps
+    }
+  }
+}
+
+  `;
 // Insert recipe
 export const INSERT_RECIPE = gql`
   mutation InsertRecipe($object: recipes_insert_input!) {
