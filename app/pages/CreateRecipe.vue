@@ -94,20 +94,24 @@
 
 <script setup>
 import { reactive } from "vue"
+import { onMounted,onUnmounted, ref } from "vue"
 import { useMutation } from "@vue/apollo-composable"
 import { ADD_RECIPE } from "@/graphql/recipes.gql"
+import { INSERT_INSTRUCTION } from "~/graphql/ instructions.gql"
 
 const form = reactive({
   name: "",
   ingredients: "",
   time: "",
   steps: "",
-  category_id: null,
+  category_id: 10,
   image: null,
   imagePreview: null,
 })
-
+const loggedInId = ref(null)
 const { mutate: addRecipe } = useMutation(ADD_RECIPE)
+const { mutate: insertInstruction } = useMutation(INSERT_INSTRUCTION)
+
 
 function handleImageUpload(event) {
   const file = event.target.files[0]
@@ -116,40 +120,65 @@ function handleImageUpload(event) {
     form.imagePreview = URL.createObjectURL(file)
   }
 }
+console.log("User ID before submit:", loggedInId.value)
+
+onMounted(() => {
+  const userId = localStorage.getItem('userId')
+  loggedInId.value = userId || "c6f1a0e5-1234-4a8f-9d20-babc1234abcd"
+  if (!userId) {
+    alert('You must be logged in to create a recipe.')
+  } 
+   else {
+    console.log('User is logged in with token:', userId)
+  }
+
+  if (loggedInId.value) {
+    console.log('Component mounted', loggedInId.value)
+  } else {
+    console.warn('No user ID found in localStorage')
+  }
+})
+const catNumber = 10
+const errorCatch = ref(null)
+console.log('Component mounted', loggedInId.value)
 
 async function handleSubmit() {
   try {
-    // Convert comma-separated ingredients into array of objects
-    const ingredientsArray = form.ingredients
-      .split(",")
-      .map(i => i.trim())
-      .filter(i => i !== "")
-      .map(i => ({ ingredient_name: i }))
-
-    // Convert steps (each line) into array
+    // Convert steps into array
     const stepsArray = form.steps
       .split("\n")
       .map(s => s.trim())
       .filter(s => s !== "")
 
+    // 1️⃣ Insert instructions first
+    const { data: instructionsData } = await insertInstruction({
+      steps: stepsArray,
+    })
+
+    const instructionId = instructionsData.insert_instructions_one.id
+    console.log("Inserted instructions with ID:", instructionId)
+
+    // 2️⃣ Build recipe variables
     const variables = {
-      user_id: "3c348837-f3a7-44f8-892d-f35be74a98fb",
+      user_id: loggedInId.value,
       title: form.name,
       prep_time_minutes: form.time,
-      image: form.image ? form.image.name : null, // only storing file name for now
-      category_id: 10,
-      ingredients: ingredientsArray,
-      instructions: [{ steps: stepsArray }],
+      image: form.image ? form.image.name : null,
+      category_id: form.category_id,
+      instruction_id: instructionId,   // ✅ fixed here
     }
 
     console.log("Submitting recipe:", variables)
 
-    const { data } = await addRecipe({ variables })
+    // 3️⃣ Insert recipe
+    const { data: recipeData } = await addRecipe(variables)
+    alert(`✅ Recipe "${recipeData.insert_recipes_one.title}" added successfully!`)
 
-    alert(`✅ Recipe "${data.insert_recipes_one.title}" added successfully!`)
   } catch (error) {
+    errorCatch.value = error
     console.error("❌ Error adding recipe:", error)
     alert("Failed to add recipe. Check console for details.")
   }
 }
+
 </script>

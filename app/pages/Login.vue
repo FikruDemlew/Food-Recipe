@@ -50,11 +50,48 @@
 <script setup>
 import { ref } from "vue";
 
+// State
 const email = ref("");
 const password = ref("");
+const loading = ref(false);
 
-function handleLogin() {
-  console.log("Login with:", email.value, password.value);
-  alert("Login submitted!");
+async function handleLogin() {
+  loading.value = true;
+  try {
+    const res = await fetch("http://localhost:8081/login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        input: {
+          email: email.value,
+          password: password.value,
+        },
+      }),
+    });
+
+    const data = await res.json();
+    console.log("Response from backend:", data);
+
+    if (!res.ok) {
+      alert(data.message || "Login failed");
+      return;
+    }
+
+    // Save token in localStorage
+    localStorage.setItem("accessToken", data.accessToken);
+
+    alert("Login successful!");
+    // Navigate to dashboard/home
+    window.location.href = "/";
+    localStorage.setItem("token", data.accessToken);
+    localStorage.setItem("userId", data.id);
+  } catch (err) {
+    console.error("Login error:", err);
+    alert("Something went wrong");
+  } finally {
+    loading.value = false;
+  }
 }
 </script>

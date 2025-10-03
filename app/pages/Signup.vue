@@ -66,8 +66,39 @@ const name = ref("");
 const email = ref("");
 const password = ref("");
 
-function handleSignup() {
-  console.log("Signup with:", name.value, email.value, password.value);
-  alert("Signup submitted!");
+async function handleSignup() {
+  try {
+    const res = await fetch("http://localhost:8081/signup", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        username: name.value,
+        email: email.value,
+        password: password.value,
+      }),
+    }); 
+
+    if (!res.ok) {
+      const errorData = await res.json();
+      console.error("Signup failed:", errorData);
+      alert(
+        errorData.message || (errorData.errors && errorData.errors[0].message) || "Signup failed"
+      );
+      return;
+    }
+
+    const data = await res.json();
+    console.log("Signup successful:", data);
+    alert("Signup successful! Your access token: " + data.accessToken);
+
+    // TODO: You can store JWT in localStorage or redirect to login/dashboard
+    // navigate to dashboard page
+    window.location.href = "/login";
+  } catch (err) {
+    console.error("Signup error:", err);
+    alert("Something went wrong during signup.");
+  }
 }
 </script>

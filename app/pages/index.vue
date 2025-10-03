@@ -67,9 +67,6 @@ import { ref, onMounted, onUnmounted } from 'vue'
 
 
 
-
-
-
 // Scroll effect
 const isScrolled = ref(false)
 const handleScroll = () => {

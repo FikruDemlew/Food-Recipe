@@ -95,7 +95,7 @@
     </div>
 
     <!-- Auth Buttons -->
-    <div class="hidden md:flex items-center justify-end text-white font-quick font-bold gap-4 px-4 md:px-6">
+    <div v-if="!isLoggedIn" class="hidden md:flex items-center justify-end text-white font-quick font-bold gap-4 px-4 md:px-6">
       <NuxtLink to="/Login">
         <button class="cursor-pointer px-4 py-2 bg-transparent border border-white rounded-xl hover:bg-white hover:text-black transition">
           Login
@@ -104,6 +104,18 @@
       <NuxtLink to="/Signup">
         <button class="cursor-pointer px-4 py-2 bg-midnight rounded-xl hover:bg-red-700 transition">
           Sign Up
+        </button>
+      </NuxtLink>
+    </div>
+    <div v-if="isLoggedIn" class="hidden md:flex items-center justify-end text-white font-quick font-bold gap-4 px-4 md:px-6">
+      <NuxtLink to="/CreateRecipe">
+        <button class="cursor-pointer px-4 py-2 bg-transparent border border-white rounded-xl hover:bg-white hover:text-black transition">
+          Create Recipe
+        </button>
+      </NuxtLink>
+      <NuxtLink to="/MyProfile">
+        <button class="cursor-pointer px-4 py-2 bg-midnight rounded-xl hover:bg-red-700 transition">
+          My Profile
         </button>
       </NuxtLink>
     </div>
@@ -129,6 +141,18 @@ const handleScroll = () => {
   isScrolled.value = window.scrollY > 50
 }
 
+const isLoggedIn = ref(false);
+
+// Check login status on mount
+onMounted(() => {
+const token = localStorage.getItem("token");
+if(token) {
+isLoggedIn.value = true;
+console.log("User is logged in with token:", token);
+} else {
+  console.log("No token found");
+}
+});
 onMounted(() => {
   window.addEventListener('scroll', handleScroll)
 })

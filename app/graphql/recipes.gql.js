@@ -151,10 +151,9 @@ export const ADD_RECIPE = gql`
   $title: String
   $prep_time_minutes: Int
   $image: String
-  $category_id: uuid!
+  $category_id: Int
   $user_id: uuid!
-  $ingredients: [ingredients_insert_input!]
-  $instructions: [instructions_insert_input!]
+  $instruction_id: uuid!
 ) {
   insert_recipes_one(object: {
     title: $title
@@ -162,8 +161,7 @@ export const ADD_RECIPE = gql`
     image: $image
     category_id: $category_id
     user_id: $user_id
-    ingredients: { data: $ingredients }
-    instructions: { data: $instructions }
+    instruction_id: $instruction_id
   }) {
     id
     title
