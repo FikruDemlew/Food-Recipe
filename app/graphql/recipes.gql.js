@@ -149,6 +149,7 @@ export const DELETE_RECIPE = gql`
 export const ADD_RECIPE = gql`
   mutation AddRecipe(
   $title: String
+  $description: String
   $prep_time_minutes: Int
   $image: String
   $category_id: Int
@@ -157,6 +158,7 @@ export const ADD_RECIPE = gql`
 ) {
   insert_recipes_one(object: {
     title: $title
+    description: $description
     prep_time_minutes: $prep_time_minutes
     image: $image
     category_id: $category_id

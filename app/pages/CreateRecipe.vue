@@ -18,6 +18,17 @@
           />
         </div>
 
+        <div>
+          <label class="block text-gray-700 font-medium mb-2">Food Description</label>
+          <input
+            v-model="form.description"
+            type="text"
+            placeholder="Enter food description"
+            class="w-full p-3 border rounded-xl focus:ring focus:ring-blue-300"
+            required
+          />
+        </div>
+
         <!-- Ingredients -->
         <div>
           <label class="block text-gray-700 font-medium mb-2">Ingredients (comma separated)</label>
@@ -98,9 +109,11 @@ import { onMounted,onUnmounted, ref } from "vue"
 import { useMutation } from "@vue/apollo-composable"
 import { ADD_RECIPE } from "@/graphql/recipes.gql"
 import { INSERT_INSTRUCTION } from "~/graphql/ instructions.gql"
+import { INSERT_INGREDIENT } from "~/graphql"
 
 const form = reactive({
   name: "",
+  description: "",
   ingredients: "",
   time: "",
   steps: "",
@@ -111,6 +124,7 @@ const form = reactive({
 const loggedInId = ref(null)
 const { mutate: addRecipe } = useMutation(ADD_RECIPE)
 const { mutate: insertInstruction } = useMutation(INSERT_INSTRUCTION)
+const { mutate: insertIngredient } = useMutation(INSERT_INGREDIENT)
 
 
 function handleImageUpload(event) {
@@ -144,6 +158,7 @@ console.log('Component mounted', loggedInId.value)
 
 async function handleSubmit() {
   try {
+    
     // Convert steps into array
     const stepsArray = form.steps
       .split("\n")
@@ -162,6 +177,7 @@ async function handleSubmit() {
     const variables = {
       user_id: loggedInId.value,
       title: form.name,
+      description: form.description,
       prep_time_minutes: form.time,
       image: form.image ? form.image.name : null,
       category_id: form.category_id,
@@ -174,6 +190,16 @@ async function handleSubmit() {
     const { data: recipeData } = await addRecipe(variables)
     alert(`✅ Recipe "${recipeData.insert_recipes_one.title}" added successfully!`)
 
+    const recipeId = recipeData.insert_recipes_one.id
+    console.log("Inserted recipe with ID:", recipeId)
+    const ingredientInfo = {
+      recipe_id: recipeId,
+      ingredient_name: String(form.ingredients)
+    }
+
+    const { data: ingredientData } = await insertIngredient(ingredientInfo)
+    console.log("Inserted ingredients:", ingredientData)
+    
   } catch (error) {
     errorCatch.value = error
     console.error("❌ Error adding recipe:", error)

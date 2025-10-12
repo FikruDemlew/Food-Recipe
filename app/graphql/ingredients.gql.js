@@ -9,11 +9,14 @@ export const GET_INSTRUCTIONS = gql`
   }
 `;
 
-export const ADD_INSTRUCTION = gql`
-  mutation AddInstruction($steps: [String!]!) {
-    insert_instructions_one(object: {steps: $steps}) {
-      id
-      steps
+export const INSERT_INGREDIENT = gql`
+  mutation InsertIngredient(
+    $recipe_id: uuid!
+    $ingredient_name: String!
+    ) {
+    insert_recipe_ingredients_one(object: {recipe_id: $recipe_id, ingredient_name: $ingredient_name}) {
+      recipe_id
+      ingredient_name
     }
   }
 `;
